@@ -42,7 +42,7 @@
     border:1px solid pink;
 }
 .item-number,.item-musicName,.item-musicTime{
-    display: inline;
+    display: inline-block;;
 }
 .list-item:hover{
     background-color: yellow;
@@ -76,7 +76,7 @@
 .hidden{
     display: none !important;
 }
-#id-played-bar,#id-load-bar {
+#id-played-bar,#id-music-bar {
     cursor: pointer;
     display: inline-block;
     height: 6px;
@@ -84,14 +84,21 @@
     bottom: 87px;
     float: left;
     border-radius: 4px;
-    /*background: -webkit-linear-gradient(left, #fec514, #EE4000);*/
-    background: black;
     position: absolute;
+}
+#id-music-bar{
+    background: #8bc34a;
+    opacity: 0.5;
+}
+#id-played-bar{
+    background: -webkit-linear-gradient(left, #fec514, #EE4000);
+    /*background: linear-gradient(left, #fec514, #EE4000);*/
+
     z-index: 2;
     transition: all 0.5s;
 }
-#id-played-bar:after{
-	content: '';
+/*#id-played-bar:after{
+    content: '';
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
@@ -99,7 +106,7 @@
 	position: absolute;
 	right: -2px;
 	top: -2px;
-}
+}*/
 #id-current-time {
     display: inline-block;
     height: 5px;

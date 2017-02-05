@@ -36,7 +36,7 @@ var music = dqs('#id-music-01')
 var playIcon = dqs('#id-icon-play')
 var pauseIcon = dqs('#id-icon-pause')
 
-music.volume = 0.1
+music.volume = 0.01
 playIcon.addEventListener('click', function(){
     music.play()
     toggleClass(playIcon, 'hidden')
@@ -62,38 +62,24 @@ music.addEventListener('timeupdate', function(){
 	// 播放进度条控制播放时间
 var playedBar = dqs('#id-played-bar')
 var musicBar = dqs('#id-music-bar')
-// mouseover
-playedBar.addEventListener('mouseover', function () {
-//
-// })
-// playedBar.onclick = function (event) {
-//     var musicBarWidth = playedBar.clientWidth;
-//     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration;
-//     music.currentTime = newCurrentTime;
-//     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
-//     playedBar.style.width = playedBarWidth + 'px';
-// }
-// var musicBarWidth = playedBar.clientWidth;
-// var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
-// playedBar.style.width = playedBarWidth + 'px'
-// var loadBar = dqs('#id-load-bar')
-// loadBar.onclick = function (event) {
-//     var musicBarWidth = loadBar.clientWidth;
-//     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration;
-//     music.currentTime = newCurrentTime;
-//     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
-//     playedBar.style.width = playedBarWidth + 'px';
-// }
-// musicBar = document.getElementById('music-bar'), // 播放进度控制
-// playedBar = document.getElementById('played-bar'), // 已播放进度条
-musicBar.onclick = function (event) {
+// mouseover当鼠标在进度条上时，显示其当前时间
+// playedBar.addEventListener('mouseover', function ()
+
+// 函数直接调用
+musicBar.onclick = function () {
     var musicBarWidth = musicBar.clientWidth;
     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration;
     music.currentTime = newCurrentTime;
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
     playedBar.style.width = playedBarWidth + 'px';
-};
-
+}
+playedBar.onclick = function () {
+    var musicBarWidth = musicBar.clientWidth;
+    var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration;
+    music.currentTime = newCurrentTime;
+    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
+    playedBar.style.width = playedBarWidth + 'px';
+}
 // 播放进度实时更新(修改为歌曲播放时开启定时器，暂停和页面load时清除定时器)
 setInterval(function updatePlayedBar (){
     var musicBarWidth = musicBar.clientWidth;
@@ -105,57 +91,3 @@ setInterval(function updatePlayedBar (){
         next.onclick();
     }
 }, 1000);
-// 音乐列表
-// var a = dqsa('#music-01')
-// a.source='music\1.mp3'
-// a.play()
-// $(document).ready(function() {
-
-//     var music = document.getElementById("music");
-//     music.src = "1.mp3";
-//
-//     $("#Play").on('click', function() {
-//         if (music.paused) {
-//             if ($(this).children().hasClass('glyphicon-play')) {
-//                 $("#Play").children("span").removeClass("glyphicon-play").addClass("glyphicon-pause");
-//                 Play();
-//             }
-//         } else {
-//             $("#Play").children("span").removeClass("glyphicon-pause").addClass("glyphicon-play");
-//             Pause();
-//         }
-//     }); // Button cilick
-//
-//     function Play() {
-//         music.play();
-//         TimeSpan();
-//     } //Play()
-//
-//     function Pause() {
-//         music.pause();
-//     } //Pause()
-//
-//     function TimeSpan() {
-//         var ProcessNow = 0;
-//         setInterval(function() {
-//             var ProcessNow = (music.currentTime / music.duration) * 260;
-//             $(".ProcessNow").css("width", ProcessNow);
-//             var currentTime = timeFormat(music.currentTime);
-//             var timeAll = timeFormat(TimeAll());
-//             $(".SongTime").html(currentTime + " | " + timeAll);
-//         }, 1000);
-//     } //TimeSpan()
-//
-//     function timeFormat(number) {
-//         var minute = parseInt(number / 60);
-//         var second = parseInt(number % 60);
-//         minute = minute >= 10 ? minute : "0" + minute;
-//         second = second >= 10 ? second : "0" + second;
-//         return minute + ":" + second;
-//     } //timeFormat()
-//
-//     function TimeAll() {
-//         return music.duration;
-//     } //TimeAll()
-//
-// })

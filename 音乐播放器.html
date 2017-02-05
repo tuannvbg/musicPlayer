@@ -10,22 +10,9 @@
         <div class="music-container">
             <!-- 播放列表 -->
             <div class="music-list">
-                <!-- <audio id='id-audio-music'>
-                  <source src="1.mp3">
-                </audio >
-            var b = dqs('#music-01')
-        b.play()
-    b.pause()
- -->
                 <audio id="id-music-01">
                     <source src="01.mp3">
                 </audio>
-                <!-- <div class="list-item">01</div>
-                <div class="list-item">02</div>
-                <div class="list-item">03</div> -->
-                    <!-- <div class="item-number">1</div>
-                    <div class="item-musicName" href='D:\未知方向的资源\作品\音乐播放器\music\1.mp3'>niunai</div>
-                    <div class="item-musicTime">00:00</div> -->
             </div>
             <!-- 专辑图片 -->
             <div class="music-picture">图片</div>
@@ -36,8 +23,8 @@
                 <span id="id-total-time"></span>
                 <!-- 进度条 -->
                 <span id="id-control-bar">
-                    <span id="id-music-bar" style="width:250px; background-color:black"></span>
-                    <span id="id-played-bar" style="width:250px; background-color:red"></span>
+                    <span id="id-music-bar" style="width:250px;"></span>
+                    <span id="id-played-bar"></span>
                 </span>
                 <!-- 播放控制 -->
                 <img src="icon\play.png" id="id-icon-play">
@@ -48,53 +35,6 @@
             <!-- 歌词 -->
             <div class="music-lyrics">歌词</div>
         </div>
-
-
-        <!-- 别人的界面 -->
-        <div class='MusicPanel'>
-
-            <div class='PanelLeft'>
-                <div class='circle'>
-                    <img class='icon glyphicon-heart'>
-                </div>
-            </div>
-            <!-- 喜欢按钮 -->
-
-            <div class='PanelRight'>
-                <div class='Prev'>
-                    <span class='icon glyphicon-step-backward'>
-                    </span>
-                </div>
-                <!-- Prev Song Button -->
-                <div id='Play' class='Play'>
-                    <span class='icon glyphicon-play'></span>
-                </div>
-                <!-- Play & Pause Button -->
-                <div class='Next'>
-                    <span class='icon glyphicon-step-forward'>
-                    </span>
-                </div>
-                <!-- Next Song Button -->
-                <div class="Song">
-                    <span class='SongAuthor'>Greyson Chance</span>
-                </br>
-                <span class='SongName'>Summertrain</span></div>
-                <!-- Song Title -->
-
-                <div class="Process">
-                    <!-- Process -->
-                    <div class="ProcessAll"></div>
-                    <!-- ProcessAll -->
-                    <div class="ProcessNow"></div>
-                    <!-- ProcessNow -->
-                    <div class="SongTime">00:00&nbsp;|&nbsp;00:00</div>
-                    <!-- Time -->
-                </div>
-                <!-- Process End -->
-            </div>
-            <!-- PanelRight End -->
-        </div>
-        <!-- MusicPanel End -->
-<script src="audio.js"></script>
+        <script src="audio.js"></script>
     </body>
 </html>
