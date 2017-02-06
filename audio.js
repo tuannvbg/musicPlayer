@@ -1,3 +1,4 @@
+
 var music = dqs('#id-music-playing')
 var playIcon = dqs('#id-icon-play')
 var pauseIcon = dqs('#id-icon-pause')
@@ -8,9 +9,8 @@ var currentTime = dqs('#id-current-time')
 var totalTime = dqs('#id-total-time')
 var playedBar = dqs('#id-played-bar')
 var musicBar = dqs('#id-music-bar')
-// 初始化播放音量和循环
-music.volume = 0.08
-// music.loop = true
+var playList = dqs('.play-list')
+var playLists = dqsa('.play-list-song')
 
 var musicPlay = function(){
     music.play()
@@ -26,18 +26,18 @@ var musicPause = function(){
 }
 playIcon.addEventListener('click', musicPlay)
 pauseIcon.addEventListener('click', musicPause)
-
+// 播放时间显示
+// music 载入音乐需要时间, 载入完成后会触发 'canplay' 事件
+// 所以我们在 canplay 里面设置时间
 music.addEventListener('canplay', function(){
-    // music 载入音乐需要时间, 载入完成后会触发 'canplay' 事件
-    // 所以我们在 canplay 里面设置时间
     totalTime.innerHTML = transTime(music.duration)
 })
 music.addEventListener('timeupdate', function(){
     currentTime.innerHTML = transTime(music.currentTime)
 })
 
-// mouseover当鼠标在进度条上时，显示其当前时间
-// playedBar.addEventListener('mouseover', function ()
+// mouseover当鼠标在进度条上时，显示其当前时间，
+// 计算当前playBar的宽度与总宽的比例乘以总时间
 
 // 函数直接调用
 musicBar.onclick = function () {
@@ -62,28 +62,46 @@ setInterval(function updatePlayedBar (){
     currentTime.innerHTML = transTime(music.currentTime)
     //如果是时间结束，并且是非单曲循环，自动下一曲
     if (music.currentTime === music.duration && !music.loop) {
-        next.onclick()
+        nextIcon.click()
     }
 }, 1000)
 
-var playList = dqs('.play-list')
 playList.addEventListener('click', function(event){
     var target = event.target
     if (target.classList.contains('play-list-song')) {
         var song = target.attributes["path"].value
         music.src = song
+        var a = playIcon.classList.contains('hidden')
+        var b = musicCover.classList.contains('rotated')
+        if (a&&b) {
+            toggleClass(pauseIcon, 'hidden')
+            toggleClass(playIcon, 'hidden')
+            toggleClass(musicCover, 'rotated')
+        }
+        playIcon.click()
     }
-    var a = playIcon.classList.contains('hidden')
-    var b = musicCover.classList.contains('rotated')
-    if (a&&b) {
-        toggleClass(pauseIcon, 'hidden')
-        toggleClass(playIcon, 'hidden')
-        toggleClass(musicCover, 'rotated')
-    }
-    playIcon.click()
-
 })
-var playLists = dqsa('.play-list-song')
+
+$('.list-search').on('keyup', function(event){
+    var search = event.target
+    var v = search.value
+    searchTitle(v)
+    // 在所有的 gua-title 中搜索 v
+    // 先隐藏所有的 gua-title(添加 gua-hide class)
+    // 再把符合搜索结果的 gua-title 删除 gua-hide class
+})
+
+var searchTitle = function(v) {
+    // 先隐藏所有的 gua-title(添加 gua-hide class)
+    $('.play-list-song').hide()
+    $('.play-list-song').each(function(){
+        var title = $(this)
+        if (title.text().toLowerCase().includes(v.toLowerCase())) {
+            title.show()
+        }
+    })
+}
+
 var songs = [
     playLists[0].attributes["path"].value,
     playLists[1].attributes["path"].value,
@@ -99,27 +117,50 @@ music.addEventListener('ended', function(){
 // 下一曲
 nextIcon.addEventListener('click', function () {
     changeMusic('next')
-})
 
+})
 // 上一曲
 preIcon.addEventListener('click', function () {
     changeMusic('pre')
 })
-
 // 切换歌曲
-var currentSrcIndex = 0
-function changeMusic (direct) {
-    if (direct === 'next') {
-        ++ currentSrcIndex > songs.length - 1 && (currentSrcIndex = 0) // 下一曲
+// 找出当前music.src的值
+
+var changeMusic = function (direct) {
+    if (music.attributes["src"] == undefined) {
+        var currentSrcIndex = 0
     } else {
-        -- currentSrcIndex < 0 && (currentSrcIndex = songs.length -1) // 上一曲
+        for (var i = 0; i < songs.length; i++) {
+            if (music.attributes["src"].value == songs[i]) {
+                var currentSrcIndex = i
+            }
+        }
     }
-    currentSrc = songs[currentSrcIndex].attributes["src"].value
-    currentImg = songs[currentSrcIndex].getAttribute('data-img')
-    musicImg.setAttribute('src', currentImg)
-    music.setAttribute('src', currentSrc)
-    music.play()
-    play.innerHTML = 'Pause'
-    musicImg.style.animation = 'xuanzhuan 5s linear infinite'
-    musicTime()
+    if (direct === 'next') {
+        var currentSrcIndex = (currentSrcIndex + 1) % songs.length
+    } else {
+        var currentSrcIndex = (currentSrcIndex -1 + songs.length * 100) % songs.length
+    }
+    music.src = songs[currentSrcIndex]
+    // currentImg = songs[currentSrcIndex].getAttribute('data-img')
+    // musicImg.setAttribute('src', currentImg)
+    // music.setAttribute('src', currentSrc)
+    var a = playIcon.classList.contains('hidden')
+    var b = musicCover.classList.contains('rotated')
+    if (a&&b) {
+        toggleClass(pauseIcon, 'hidden')
+        toggleClass(playIcon, 'hidden')
+        toggleClass(musicCover, 'rotated')
+    }
+    playIcon.click()
 }
+
+// 初始化播放音量和循环
+var playInitialize = function () {
+    music.volume = 0.08
+    // music.loop = true
+}
+var _mainFunction = function(){
+    playInitialize()
+}
+_mainFunction()

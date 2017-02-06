@@ -5,6 +5,7 @@
         <title>音乐播放器</title>
         <link href="audio.css" rel="stylesheet">
         <script src='basic.js'></script>
+        <script src="jquery-3.1.1.min.js"></script>
     </head>
     <body>
         <!-- 音乐播放器容器 -->
@@ -17,6 +18,7 @@
             </div>
             <!-- 播放列表 -->
             <div class="play-list">
+                <input type="text" class='list-search' placeholder='搜索' style="border-radius:10px;text-align: center;">
                 <div class="play-list-song" path='music\01.mp3'>1.mp3</div>
                 <div class="play-list-song" path='music\02.mp3'>2.mp3</div>
                 <div class="play-list-song" path='music\03.mp3'>3.mp3</div>
@@ -43,6 +45,7 @@
                 </div>
                 <!-- 专辑图片 -->
                 <img src="cover\01.jpg" class="music-cover">
+                <!-- 音乐名称和作者 -->
                 <div class="music-information">
                     <span class="information-name">你离开了南京，从此再没人陪我说话</span>
                     <span class="information-author">李志</span>
