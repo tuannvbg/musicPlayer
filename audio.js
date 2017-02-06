@@ -1,43 +1,9 @@
-// 基本函数定义
-var log = function() {
-    console.log.apply(console, arguments)
-}
-
-var dqsa = function(selector){
-    return document.querySelectorAll(selector)
-}
-
-var dqs = function(selector){
-    return document.querySelector(selector)
-}
-
-var toggleClass = function(element, className) {
-    if (element.classList.contains(className)) {
-        element.classList.remove(className)
-    } else {
-        element.classList.add(className)
-    }
-}
-// 把秒（153.54）转换成时间格式02:33
-var transTime = function(time) {
-    var minute = parseInt(time / 60);
-    var second = parseInt(time % 60);
-    if (minute < 10) {
-        minute = '0'+ minute;
-    }
-    if (second < 10) {
-        second = '0'+ second;
-    }
-    var t =  `${minute}:${second}`
-    return t
-}
-
 var music = dqs('#id-music-playing')
 var playIcon = dqs('#id-icon-play')
 var pauseIcon = dqs('#id-icon-pause')
 var nextIcon = dqs('#id-icon-play-forward')
 var preIcon = dqs('#id-icon-play-back')
-var musicPicture = dqs('.music-picture')
+var musicCover = dqs('.music-cover')
 var currentTime = dqs('#id-current-time')
 var totalTime = dqs('#id-total-time')
 var playedBar = dqs('#id-played-bar')
@@ -50,13 +16,13 @@ var musicPlay = function(){
     music.play()
     toggleClass(playIcon, 'hidden')
     toggleClass(pauseIcon, 'hidden')
-    toggleClass(musicPicture, 'rotated')
+    toggleClass(musicCover, 'rotated')
 }
 var musicPause = function(){
     music.pause()
     toggleClass(pauseIcon, 'hidden')
     toggleClass(playIcon, 'hidden')
-    toggleClass(musicPicture, 'rotated')
+    toggleClass(musicCover, 'rotated')
 }
 playIcon.addEventListener('click', musicPlay)
 pauseIcon.addEventListener('click', musicPause)
@@ -75,30 +41,30 @@ music.addEventListener('timeupdate', function(){
 
 // 函数直接调用
 musicBar.onclick = function () {
-    var musicBarWidth = musicBar.clientWidth;
-    var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration;
-    music.currentTime = newCurrentTime;
-    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
-    playedBar.style.width = playedBarWidth + 'px';
+    var musicBarWidth = musicBar.clientWidth
+    var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
+    music.currentTime = newCurrentTime
+    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
+    playedBar.style.width = playedBarWidth + 'px'
 }
 playedBar.onclick = function () {
-    var musicBarWidth = musicBar.clientWidth;
-    var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration;
-    music.currentTime = newCurrentTime;
-    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
-    playedBar.style.width = playedBarWidth + 'px';
+    var musicBarWidth = musicBar.clientWidth
+    var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
+    music.currentTime = newCurrentTime
+    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
+    playedBar.style.width = playedBarWidth + 'px'
 }
 // 播放进度实时更新(修改为歌曲播放时开启定时器，暂停和页面load时清除定时器)
 setInterval(function updatePlayedBar (){
-    var musicBarWidth = musicBar.clientWidth;
-    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth;
-    playedBar.style.width = playedBarWidth + 'px';
-    currentTime.innerHTML = transTime(music.currentTime);
+    var musicBarWidth = musicBar.clientWidth
+    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
+    playedBar.style.width = playedBarWidth + 'px'
+    currentTime.innerHTML = transTime(music.currentTime)
     //如果是时间结束，并且是非单曲循环，自动下一曲
     if (music.currentTime === music.duration && !music.loop) {
-        next.onclick();
+        next.onclick()
     }
-}, 1000);
+}, 1000)
 
 var playList = dqs('.play-list')
 playList.addEventListener('click', function(event){
@@ -106,14 +72,16 @@ playList.addEventListener('click', function(event){
     if (target.classList.contains('play-list-song')) {
         var song = target.attributes["path"].value
         music.src = song
-        // 点击playbutton
-        playIcon.click()
-        // if (!music.paused) {
-        //     toggleClass(playIcon, 'hidden')
-        //     toggleClass(pauseIcon, 'hidden')
-        //     toggleClass(musicPicture, 'rotated')
-        // }
     }
+    var a = playIcon.classList.contains('hidden')
+    var b = musicCover.classList.contains('rotated')
+    if (a&&b) {
+        toggleClass(pauseIcon, 'hidden')
+        toggleClass(playIcon, 'hidden')
+        toggleClass(musicCover, 'rotated')
+    }
+    playIcon.click()
+
 })
 var playLists = dqsa('.play-list-song')
 var songs = [
@@ -129,29 +97,29 @@ music.addEventListener('ended', function(){
     music.play()
 })
 // 下一曲
-nextIcon.onclick = function () {
-    changeMusic('next');
-};
+nextIcon.addEventListener('click', function () {
+    changeMusic('next')
+})
 
 // 上一曲
-preIcon.onclick = function () {
-    changeMusic('prev');
-};
+preIcon.addEventListener('click', function () {
+    changeMusic('pre')
+})
 
 // 切换歌曲
 var currentSrcIndex = 0
 function changeMusic (direct) {
     if (direct === 'next') {
-        ++ currentSrcIndex > songs.length - 1 && (currentSrcIndex = 0); // 下一曲
+        ++ currentSrcIndex > songs.length - 1 && (currentSrcIndex = 0) // 下一曲
     } else {
-        -- currentSrcIndex < 0 && (currentSrcIndex = songs.length -1); // 上一曲
+        -- currentSrcIndex < 0 && (currentSrcIndex = songs.length -1) // 上一曲
     }
-    currentSrc = songs[currentSrcIndex].attributes["src"].value;
+    currentSrc = songs[currentSrcIndex].attributes["src"].value
     currentImg = songs[currentSrcIndex].getAttribute('data-img')
-    musicImg.setAttribute('src', currentImg);
-    music.setAttribute('src', currentSrc);
-    music.play();
-    play.innerHTML = 'Pause';
-    musicImg.style.animation = 'xuanzhuan 5s linear infinite';
-    musicTime();
+    musicImg.setAttribute('src', currentImg)
+    music.setAttribute('src', currentSrc)
+    music.play()
+    play.innerHTML = 'Pause'
+    musicImg.style.animation = 'xuanzhuan 5s linear infinite'
+    musicTime()
 }

@@ -3,7 +3,7 @@
     width: 800px;
     height: 600px;
     margin: 0 auto;
-    border:1px solid #76dba3;
+    border:0px solid #76dba3;
 }
 .play-list{
     position: absolute;
@@ -14,7 +14,7 @@
     margin: 0 auto;
     border:1px solid #9e9e9e;
 }
-.music-picture {
+.music-cover {
     position: absolute;
     top: 20%;
     left: 30%;
