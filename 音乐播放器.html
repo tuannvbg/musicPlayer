@@ -8,29 +8,44 @@
     <body>
         <!-- 音乐播放器容器 -->
         <div class="music-container">
-            <!-- 播放列表 -->
+            <!-- 播放文件 -->
             <div class="music-list">
-                <audio id="id-music-01">
-                    <source src="01.mp3">
+                <audio id="id-music-playing">
+                    <source src="music\01.mp3">
                 </audio>
             </div>
-            <!-- 专辑图片 -->
-            <div class="music-picture">图片</div>
+            <!-- 播放列表 -->
+            <div class="play-list">
+                <div class="play-list-song" path='music\01.mp3'>1.mp3</div>
+                <div class="play-list-song" path='music\02.mp3'>2.mp3</div>
+                <div class="play-list-song" path='music\03.mp3'>3.mp3</div>
+            </div>
+
             <!-- 操作界面 -->
             <div class="music-manipulate">
                 <!-- 播放时间 -->
-                <span id="id-current-time">00:00</span>
-                <span id="id-total-time"></span>
+                <div class="play-time">
+                    <span id="id-current-time">00:00</span>
+                    <span id="id-total-time"></span>
+                </div>
                 <!-- 进度条 -->
                 <span id="id-control-bar">
                     <span id="id-music-bar" style="width:250px;"></span>
                     <span id="id-played-bar"></span>
                 </span>
                 <!-- 播放控制 -->
-                <img src="icon\play.png" id="id-icon-play">
-                <img src="icon\pause.png" id="id-icon-pause" class="hidden">
-                <img src="icon\play-back.png" id="id-icon-play-back">
-                <img src="icon\play-forward.png" id="id-icon-play-forward">
+                <div class="play-control">
+                    <img src="icon\play.png" id="id-icon-play">
+                    <img src="icon\pause.png" id="id-icon-pause" class="hidden">
+                    <img src="icon\play-back.png" id="id-icon-play-back">
+                    <img src="icon\play-forward.png" id="id-icon-play-forward">
+                </div>
+                <!-- 专辑图片 -->
+                <img src="cover\01.jpg" class="music-picture">
+                <div class="music-information">
+                    <span class="information-name">你离开了南京，从此再没人陪我说话</span>
+                    <span class="information-author">李志</span>
+                </div>
             </div>
             <!-- 歌词 -->
             <div class="music-lyrics">歌词</div>

@@ -32,24 +32,35 @@ var transTime = function(time) {
     return t
 }
 
-var music = dqs('#id-music-01')
+var music = dqs('#id-music-playing')
 var playIcon = dqs('#id-icon-play')
 var pauseIcon = dqs('#id-icon-pause')
+var nextIcon = dqs('#id-icon-play-forward')
+var preIcon = dqs('#id-icon-play-back')
+var musicPicture = dqs('.music-picture')
+var currentTime = dqs('#id-current-time')
+var totalTime = dqs('#id-total-time')
+var playedBar = dqs('#id-played-bar')
+var musicBar = dqs('#id-music-bar')
+// 初始化播放音量和循环
+music.volume = 0.08
+// music.loop = true
 
-music.volume = 0.01
-playIcon.addEventListener('click', function(){
+var musicPlay = function(){
     music.play()
     toggleClass(playIcon, 'hidden')
     toggleClass(pauseIcon, 'hidden')
-})
-pauseIcon.addEventListener('click', function(){
+    toggleClass(musicPicture, 'rotated')
+}
+var musicPause = function(){
     music.pause()
     toggleClass(pauseIcon, 'hidden')
     toggleClass(playIcon, 'hidden')
-})
+    toggleClass(musicPicture, 'rotated')
+}
+playIcon.addEventListener('click', musicPlay)
+pauseIcon.addEventListener('click', musicPause)
 
-var currentTime = dqs('#id-current-time')
-var totalTime = dqs('#id-total-time')
 music.addEventListener('canplay', function(){
     // music 载入音乐需要时间, 载入完成后会触发 'canplay' 事件
     // 所以我们在 canplay 里面设置时间
@@ -59,9 +70,6 @@ music.addEventListener('timeupdate', function(){
     currentTime.innerHTML = transTime(music.currentTime)
 })
 
-	// 播放进度条控制播放时间
-var playedBar = dqs('#id-played-bar')
-var musicBar = dqs('#id-music-bar')
 // mouseover当鼠标在进度条上时，显示其当前时间
 // playedBar.addEventListener('mouseover', function ()
 
@@ -91,3 +99,59 @@ setInterval(function updatePlayedBar (){
         next.onclick();
     }
 }, 1000);
+
+var playList = dqs('.play-list')
+playList.addEventListener('click', function(event){
+    var target = event.target
+    if (target.classList.contains('play-list-song')) {
+        var song = target.attributes["path"].value
+        music.src = song
+        // 点击playbutton
+        playIcon.click()
+        // if (!music.paused) {
+        //     toggleClass(playIcon, 'hidden')
+        //     toggleClass(pauseIcon, 'hidden')
+        //     toggleClass(musicPicture, 'rotated')
+        // }
+    }
+})
+var playLists = dqsa('.play-list-song')
+var songs = [
+    playLists[0].attributes["path"].value,
+    playLists[1].attributes["path"].value,
+    playLists[2].attributes["path"].value,
+]
+var currentSongIndex = 0
+music.addEventListener('ended', function(){
+    currentSongIndex = (currentSongIndex + 1) % songs.length
+    var song = songs[currentSongIndex]
+    music.src = song
+    music.play()
+})
+// 下一曲
+nextIcon.onclick = function () {
+    changeMusic('next');
+};
+
+// 上一曲
+preIcon.onclick = function () {
+    changeMusic('prev');
+};
+
+// 切换歌曲
+var currentSrcIndex = 0
+function changeMusic (direct) {
+    if (direct === 'next') {
+        ++ currentSrcIndex > songs.length - 1 && (currentSrcIndex = 0); // 下一曲
+    } else {
+        -- currentSrcIndex < 0 && (currentSrcIndex = songs.length -1); // 上一曲
+    }
+    currentSrc = songs[currentSrcIndex].attributes["src"].value;
+    currentImg = songs[currentSrcIndex].getAttribute('data-img')
+    musicImg.setAttribute('src', currentImg);
+    music.setAttribute('src', currentSrc);
+    music.play();
+    play.innerHTML = 'Pause';
+    musicImg.style.animation = 'xuanzhuan 5s linear infinite';
+    musicTime();
+}
