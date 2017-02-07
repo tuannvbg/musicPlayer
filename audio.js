@@ -11,6 +11,8 @@ var playedBar = dqs('#id-played-bar')
 var musicBar = dqs('#id-music-bar')
 var playList = dqs('.play-list')
 var playLists = dqsa('.play-list-song')
+var musicName = dqs('.music-name')
+var tr =dqsa('tr')
 
 var musicPlay = function(){
     music.play()
@@ -36,8 +38,6 @@ music.addEventListener('timeupdate', function(){
     currentTime.innerHTML = transTime(music.currentTime)
 })
 
-// mouseover当鼠标在进度条上时，显示其当前时间，
-// 计算当前playBar的宽度与总宽的比例乘以总时间
 
 // 函数直接调用
 musicBar.onclick = function () {
@@ -86,13 +86,9 @@ $('.list-search').on('keyup', function(event){
     var search = event.target
     var v = search.value
     searchTitle(v)
-    // 在所有的 gua-title 中搜索 v
-    // 先隐藏所有的 gua-title(添加 gua-hide class)
-    // 再把符合搜索结果的 gua-title 删除 gua-hide class
 })
 
 var searchTitle = function(v) {
-    // 先隐藏所有的 gua-title(添加 gua-hide class)
     $('.play-list-song').hide()
     $('.play-list-song').each(function(){
         var title = $(this)
@@ -101,7 +97,10 @@ var searchTitle = function(v) {
         }
     })
 }
-
+var likeIcon = '<img src="icon\\like.png" class="icon-like" style="width:16px;height:16px;" >'
+var unlikeIcon =  '<img src="icon\\unlike.png" class="icon-unlike" style="width:16px;height:16px">'
+$('.music-name').prepend(unlikeIcon)
+$('.music-name').prepend(likeIcon)
 var songs = [
     playLists[0].attributes["path"].value,
     playLists[1].attributes["path"].value,

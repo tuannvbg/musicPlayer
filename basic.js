@@ -20,13 +20,13 @@ var toggleClass = function(element, className) {
 }
 // 把秒（153.54）转换成时间格式02:33
 var transTime = function(time) {
-    var minute = parseInt(time / 60);
-    var second = parseInt(time % 60);
+    var minute = parseInt(time / 60)
+    var second = parseInt(time % 60)
     if (minute < 10) {
-        minute = '0'+ minute;
+        minute = '0'+ minute
     }
     if (second < 10) {
-        second = '0'+ second;
+        second = '0'+ second
     }
     var t =  `${minute}:${second}`
     return t
