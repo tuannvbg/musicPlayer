@@ -40,17 +40,18 @@
 }
 .information-name,.information-author {
     display: block;
-    height: 50px;
     width: 150px;
     left: 120px;
     position: absolute;
     text-align: center;
 }
 .information-name {
-    bottom: 30px;
+    bottom: 20px;
+    height: 65px;
 }
 .information-author {
-    bottom: 0px;
+    bottom: -21px;
+    height: 60px;
 }
 .play-timeBar{
     position: absolute;
@@ -118,7 +119,7 @@
     right: 150px;
 }
 
-#id-played-bar,#id-music-bar,.play-list-song,#id-icon-pause,#id-icon-play,#id-icon-play-back,#id-icon-play-forward {
+#id-played-bar,#id-music-bar,.song-name,#id-icon-pause,#id-icon-play,#id-icon-play-back,#id-icon-play-forward {
         cursor: pointer;
 }
 

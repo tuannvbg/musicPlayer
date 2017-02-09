@@ -12,19 +12,30 @@ var musicBar = dqs('#id-music-bar')
 var playList = dqs('.play-list')
 var playLists = dqsa('.play-list-song')
 var musicName = dqs('.music-name')
+var songName = dqsa('.song-name')
 var tr =dqsa('tr')
+var informationName = dqs('.information-name')
+var informationAuthor = dqs('.information-author')
+var songArtist = dqsa('song-artist')
+
 
 var musicPlay = function(){
     music.play()
-    toggleClass(playIcon, 'hidden')
-    toggleClass(pauseIcon, 'hidden')
-    toggleClass(musicCover, 'rotated')
+    playIcon.classList.add('hidden')
+    pauseIcon.classList.remove('hidden')
+    musicCover.classList.add('rotated')
+    // toggleClass(playIcon, 'hidden')
+    // toggleClass(pauseIcon, 'hidden')
+    // toggleClass(musicCover, 'rotated')
 }
 var musicPause = function(){
     music.pause()
-    toggleClass(pauseIcon, 'hidden')
-    toggleClass(playIcon, 'hidden')
-    toggleClass(musicCover, 'rotated')
+    playIcon.classList.remove('hidden')
+    pauseIcon.classList.add('hidden')
+    musicCover.classList.remove('rotated')
+    // toggleClass(pauseIcon, 'hidden')
+    // toggleClass(playIcon, 'hidden')
+    // toggleClass(musicCover, 'rotated')
 }
 playIcon.addEventListener('click', musicPlay)
 pauseIcon.addEventListener('click', musicPause)
@@ -37,9 +48,20 @@ music.addEventListener('canplay', function(){
 music.addEventListener('timeupdate', function(){
     currentTime.innerHTML = transTime(music.currentTime)
 })
-
+// 播放进度实时更新(修改为歌曲播放时开启定时器，暂停和页面load时清除定时器)
+setInterval(function updatePlayedBar (){
+    var musicBarWidth = musicBar.clientWidth
+    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
+    playedBar.style.width = playedBarWidth + 'px'
+    currentTime.innerHTML = transTime(music.currentTime)
+    //如果是时间结束，并且是非单曲循环，自动下一曲
+    if (music.currentTime === music.duration && !music.loop) {
+        nextIcon.click()
+    }
+}, 1000)
 
 // 函数直接调用
+// 设置播放进度条
 musicBar.onclick = function () {
     var musicBarWidth = musicBar.clientWidth
     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
@@ -54,31 +76,16 @@ playedBar.onclick = function () {
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
 }
-// 播放进度实时更新(修改为歌曲播放时开启定时器，暂停和页面load时清除定时器)
-setInterval(function updatePlayedBar (){
-    var musicBarWidth = musicBar.clientWidth
-    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
-    playedBar.style.width = playedBarWidth + 'px'
-    currentTime.innerHTML = transTime(music.currentTime)
-    //如果是时间结束，并且是非单曲循环，自动下一曲
-    if (music.currentTime === music.duration && !music.loop) {
-        nextIcon.click()
-    }
-}, 1000)
 
 playList.addEventListener('click', function(event){
     var target = event.target
-    if (target.classList.contains('play-list-song')) {
-        var song = target.attributes["path"].value
+    if (target.classList.contains('song-name')) {
+        var song = "music\\" + target.innerText + '.mp3'
+        var cover = "cover\\" + target.innerText + '.jpg'
+        informationName.innerText = target.innerText
+        musicCover.src = cover
         music.src = song
-        var a = playIcon.classList.contains('hidden')
-        var b = musicCover.classList.contains('rotated')
-        if (a&&b) {
-            toggleClass(pauseIcon, 'hidden')
-            toggleClass(playIcon, 'hidden')
-            toggleClass(musicCover, 'rotated')
-        }
-        playIcon.click()
+        musicPlay()
     }
 })
 
@@ -99,19 +106,34 @@ var searchTitle = function(v) {
 }
 var likeIcon = '<img src="icon\\like.png" class="icon-like" style="width:16px;height:16px;" >'
 var unlikeIcon =  '<img src="icon\\unlike.png" class="icon-unlike" style="width:16px;height:16px">'
-$('.music-name').prepend(unlikeIcon)
-$('.music-name').prepend(likeIcon)
-var songs = [
-    playLists[0].attributes["path"].value,
-    playLists[1].attributes["path"].value,
-    playLists[2].attributes["path"].value,
-]
-var currentSongIndex = 0
+$('.song-name').prepend(unlikeIcon)
+$('.song-name').prepend(likeIcon)
+
+// var songs = [
+//     playLists[0].attributes["path"].value,
+//     playLists[1].attributes["path"].value,
+//     playLists[2].attributes["path"].value,
+// ]
+// 音乐播放结束后播放下一首
+
 music.addEventListener('ended', function(){
-    currentSongIndex = (currentSongIndex + 1) % songs.length
-    var song = songs[currentSongIndex]
-    music.src = song
-    music.play()
+    for (var i = 0; i < songName.length; i++) {
+        var b = informationName.innerText
+        var c = songName[i].innerText
+        if (c == b) {
+            // 在此处设置播放结束后下一曲的序号
+            // 可以设置音乐循环模式,将orderLoop的计算方式更换一下即可
+            var orderLoop = (i + 1) % songName.length
+            var f = songName[orderLoop].innerText
+            var song = "music\\" + f + '.mp3'
+            var cover = "cover\\" + f + '.jpg'
+            informationName.innerText = f
+            musicCover.src = cover
+            music.src = song
+            musicPlay()
+            break
+        }
+    }
 })
 // 下一曲
 nextIcon.addEventListener('click', function () {
@@ -129,34 +151,32 @@ var changeMusic = function (direct) {
     if (music.attributes["src"] == undefined) {
         var currentSrcIndex = 0
     } else {
-        for (var i = 0; i < songs.length; i++) {
-            if (music.attributes["src"].value == songs[i]) {
-                var currentSrcIndex = i
+                for (var i = 0; i < songName.length; i++) {
+                    var b = informationName.innerText
+                    var c = songName[i].innerText
+                    if (c == b) {
+                        var currentSrcIndex = i % songName.length
+                        break
+                    }
+                }
             }
-        }
-    }
     if (direct === 'next') {
-        var currentSrcIndex = (currentSrcIndex + 1) % songs.length
+        var currentSrcIndex = (currentSrcIndex + 1) % songName.length
     } else {
-        var currentSrcIndex = (currentSrcIndex -1 + songs.length * 100) % songs.length
+        var currentSrcIndex = (currentSrcIndex -1 + songName.length * 100) % songName.length
     }
-    music.src = songs[currentSrcIndex]
-    // currentImg = songs[currentSrcIndex].getAttribute('data-img')
-    // musicImg.setAttribute('src', currentImg)
-    // music.setAttribute('src', currentSrc)
-    var a = playIcon.classList.contains('hidden')
-    var b = musicCover.classList.contains('rotated')
-    if (a&&b) {
-        toggleClass(pauseIcon, 'hidden')
-        toggleClass(playIcon, 'hidden')
-        toggleClass(musicCover, 'rotated')
-    }
-    playIcon.click()
+    var f = songName[currentSrcIndex].innerText
+    var song = "music\\" + f + '.mp3'
+    var cover = "cover\\" + f + '.jpg'
+    informationName.innerText = f
+    musicCover.src = cover
+    music.src = song
+    musicPlay()
 }
 
 // 初始化播放音量和循环
 var playInitialize = function () {
-    music.volume = 0.08
+    music.volume = 0.2
     // music.loop = true
 }
 var _mainFunction = function(){
