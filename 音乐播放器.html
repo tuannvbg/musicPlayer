@@ -14,7 +14,13 @@
     <div class="music-container">
         <!-- 搜索功能 -->
         <div class="player-heard">
-            <input type="text" class='list-search' placeholder='搜索'>
+            <input type="text" class='list-search' placeholder='音乐搜索'>
+        </div>
+        <!-- 插图 -->
+        <div class="music-plate">
+            <img class="plate-past" src="cover\Refrain.jpg">
+            <img class="plate-now" src="cover\Flower Dance.jpg">
+            <img class="plate-next" src="cover\Inspire.jpg">
         </div>
         <!-- 播放文件 -->
         <div class="music-list">
@@ -47,7 +53,13 @@
                     <img src="icon\play-back.png" id="id-icon-play-back">
                     <img src="icon\play-forward.png" id="id-icon-play-forward">
                     <img src="icon\volume.png" id="id-icon-volume">
-                    <img src="icon\circle.png" id="id-icon-circle">
+                    <img src="icon\静音.png" id="id-icon-volume-mute" class="hidden">
+                    <img src="icon\circle.png" id="id-icon-listcircle">
+                    <img src="icon\单曲循环.png" id="id-icon-singlecircle" class="hidden">
+                    <div id="id-volume-bar" class='trans unvisi'>
+                        <span id="id-total-volume" style="width:70px;"></span>
+                        <span id="id-current-volume" style='width:'></span>
+                    </div>
                 </div>
             </div>
             <!-- 音乐名称和作者 -->
@@ -59,7 +71,7 @@
         <div class="play-list">
             <table class="fixed-headers">
                 <thead>
-                    <tr class="play-list-song">
+                    <tr class="play-list-head">
                         <th>title</th>
                         <th>Artist</th>
                         <th>Album</th>
