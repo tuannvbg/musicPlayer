@@ -170,6 +170,17 @@ playList.addEventListener('click', function(event){
     }
 })
 
+// 表格的样式设计，奇数和偶数行的background-color不同
+var rows = dqsa(".play-list-song");
+for(i = 0; i < rows.length; i++) {
+    if(i % 2 == 0) {
+        rows[i].classList.add("even-row-color");
+    } else {
+        rows[i].classList.add("odd-row-color");
+    }
+}
+
+
 $('.list-search').on('keyup', function(event){
     var search = event.target
     var v = search.value
@@ -185,11 +196,23 @@ var searchTitle = function(v) {
         }
     })
 }
-var likeIcon = '<img src="icon\\like.png" class="icon-like" style="width:16px;height:16px;" >'
+var likeIcon = '<img src="icon\\like.png" class="icon-like none" style="width:16px;height:16px;">'
 var unlikeIcon =  '<img src="icon\\unlike.png" class="icon-unlike" style="width:16px;height:16px">'
+
 $('.play-list-song').prepend(unlikeIcon)
 $('.play-list-song').prepend(likeIcon)
-
+$('.icon-like').on('click', function () {
+    var target = event.target
+    // unlikeIcons.removeClass('none')
+    target.addClass('none')
+})
+$('.icon-unlike').on('click', function () {
+    var target = event.target
+    // unlikeIcons.removeClass('none')
+    target.addClass('none')
+})
+var likeIcons = dqsa('.icon-like')
+var unlikeIcons = dqsa('.icon-unlike')
 // 音乐播放结束后播放下一首
 
 music.addEventListener('ended', function(){

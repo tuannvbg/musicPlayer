@@ -25,3 +25,18 @@ for (var i = 0; i < songName.length; i++) {
         break
     }
 }
+// 表格悬停高亮
+var altRows = function () {
+    var rows = dqsa("tr");
+    for(i = 0; i < rows.length; i++) {
+        if(i % 2 == 0) {
+            rows[i].className = "even-row-color";
+        } else {
+            rows[i].className = "odd-row-color";
+        }
+    }
+}
+
+window.onload=function(){
+    altRows('alternatecolor');
+}
