@@ -25,13 +25,17 @@ var currentVolume = dqs('#current-volume')
 var volumeIcon = dqs('#id-icon-volume')
 var listCircleIcon = dqs('#id-icon-listcircle')
 var singleCircleIcon = dqs('#id-icon-singlecircle')
-
-var findMusic = function () {
-    for (var i = 0; i < songName.length; i++) {
+var totalVolume = dqs('#id-total-volume')
+var currentVolume = dqs('#id-current-volume')
+var volumeBar = dqs('#id-volume-bar')
+var listSearch = dqs('.list-search')
+// 查找音乐
+var findMusic = function (){
+    for (var i = 0; i < songName.length; i++){
         var currentMusicIndex = 0
         var a = informationName.innerText
         var b = songName[i].innerText
-        if (b == a) {
+        if (b == a){
             var currentMusicIndex = i % songName.length
             var pastMusicIndex = (currentMusicIndex - 1 + songName.length) % songName.length
             var nextMusicIndex = (currentMusicIndex + 1) % songName.length
@@ -54,18 +58,21 @@ var findMusic = function () {
         }
     }
 }
+// 音乐播放
 var musicPlay = function(){
     music.play()
     playIcon.classList.add('hidden')
     pauseIcon.classList.remove('hidden')
     musicCover.classList.add('rotated')
 }
+// 音乐暂停
 var musicPause = function(){
     music.pause()
     playIcon.classList.remove('hidden')
     pauseIcon.classList.add('hidden')
     musicCover.classList.remove('rotated')
 }
+// 给播放、暂停按钮绑定事件
 playIcon.addEventListener('click', musicPlay)
 pauseIcon.addEventListener('click', musicPause)
 // 播放时间显示
@@ -77,89 +84,92 @@ music.addEventListener('canplay', function(){
 music.addEventListener('timeupdate', function(){
     currentTime.innerHTML = transTime(music.currentTime)
 })
+
 // 播放进度实时更新(修改为歌曲播放时开启定时器，暂停和页面load时清除定时器)
-setInterval(function updatePlayedBar (){
+// setInterval() 方法可按照指定的周期（以毫秒计）来调用函数或计算表达式。
+setInterval(function updatePlayedBar(){
     var musicBarWidth = musicBar.clientWidth
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
     currentTime.innerHTML = transTime(music.currentTime)
     //如果是时间结束，并且是非单曲循环，自动下一曲
-    if (music.currentTime === music.duration && !music.loop) {
+    if (music.currentTime === music.duration && !music.loop){
         nextIcon.click()
     }
 }, 1000)
-listCircleIcon.addEventListener('click', function() {
+
+// 播放模式：目前只有单曲循环和列表循环
+listCircleIcon.addEventListener('click', function(){
     singleCircleIcon.classList.remove('hidden')
     listCircleIcon.classList.add('hidden')
     music.loop = true
 })
-singleCircleIcon.addEventListener('click', function() {
+singleCircleIcon.addEventListener('click', function(){
     singleCircleIcon.classList.add('hidden')
     listCircleIcon.classList.remove('hidden')
     music.loop = false
 })
-// 函数直接调用
+
 // 设置播放进度条
-musicBar.onclick = function () {
+musicBar.addEventListener('click', function (){
     var musicBarWidth = musicBar.clientWidth
     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
     music.currentTime = newCurrentTime
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
-}
-playedBar.onclick = function () {
+})
+playedBar.addEventListener('click', function (){
     var musicBarWidth = musicBar.clientWidth
     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
     music.currentTime = newCurrentTime
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
-}
+})
 
 // 音量控制
-var totalVolume = dqs('#id-total-volume')
-var currentVolume = dqs('#id-current-volume')
-var volumeBar = dqs('#id-volume-bar')
-volumeIcon.addEventListener('mouseover', function() {
-    // volumeBar.classList.remove('hidden')
+volumeIcon.addEventListener('mouseover', function(){
     volumeBar.classList.remove('unvisi')
 })
-volumeIcon.addEventListener('mouseout', function() {
+volumeIcon.addEventListener('mouseout', function(){
     volumeBar.classList.add('unvisi')
 })
-volumeBar.addEventListener('mouseover', function() {
+volumeBar.addEventListener('mouseover', function(){
     volumeBar.classList.remove('unvisi')
 })
-volumeBar.addEventListener('mouseout', function() {
+volumeBar.addEventListener('mouseout', function(){
     volumeBar.classList.add('unvisi')
 })
-volumeMuteIcon.addEventListener('click', function() {
+volumeMuteIcon.addEventListener('click', function(){
     volumeIcon.classList.remove('hidden')
     volumeMuteIcon.classList.add('hidden')
     music.muted = false
 })
-volumeIcon.addEventListener('click', function() {
+volumeIcon.addEventListener('click', function(){
     volumeIcon.classList.add('hidden')
     volumeMuteIcon.classList.remove('hidden')
     music.muted = true
 })
-totalVolume.onclick = function () {
+totalVolume.addEventListener('click', function (){
     var totalVolumeWidth = totalVolume.clientWidth
     var newCurrentVolume = event.offsetX / totalVolumeWidth
     music.volume = newCurrentVolume
     var currentVolumeWidth = newCurrentVolume * totalVolumeWidth
     currentVolume.style.width = currentVolumeWidth + 'px'
-}
-
-currentVolume.onclick = function () {
+})
+currentVolume.addEventListener('click', function (){
     var totalVolumeWidth = totalVolume.clientWidth
     var newCurrentVolume = event.offsetX / totalVolumeWidth
     music.volume = newCurrentVolume
     var currentVolumeWidth = newCurrentVolume * totalVolumeWidth
     currentVolume.style.width = currentVolumeWidth + 'px'
-}
+})
+// 歌曲列表点击，播放音乐
 playList.addEventListener('click', function(event){
     var target = event.target
-    if (target.classList.contains('song-name')) {
+    if (target.classList.contains('song-name')){
+        // 可以根据childNodes找到相邻的歌曲信息,可以将右边的图片改为歌手的图片
+        // var a002 = target.parentElement.childNodes[5].innerText
+        // log(target, a002)
         var song = "music\\" + target.innerText + '.mp3'
         var cover = "cover\\" + target.innerText + '.jpg'
         informationName.innerText = target.innerText
@@ -171,55 +181,62 @@ playList.addEventListener('click', function(event){
 })
 
 // 表格的样式设计，奇数和偶数行的background-color不同
-var rows = dqsa(".play-list-song");
-for(i = 0; i < rows.length; i++) {
-    if(i % 2 == 0) {
-        rows[i].classList.add("even-row-color");
+for(i = 0; i < playLists.length; i++){
+    if(i % 2 == 0){
+        playLists[i].classList.add("even-row-color");
     } else {
-        rows[i].classList.add("odd-row-color");
+        playLists[i].classList.add("odd-row-color");
     }
 }
-
-
-$('.list-search').on('keyup', function(event){
+// 歌曲搜索功能
+listSearch.addEventListener('keyup', function(event){
     var search = event.target
     var v = search.value
     searchTitle(v)
 })
 
-var searchTitle = function(v) {
-    $('.play-list-song').hide()
-    $('.play-list-song').each(function(){
-        var title = $(this)
-        if (title.text().toLowerCase().includes(v.toLowerCase())) {
-            title.show()
+var searchTitle = function(v){
+    // 给所有歌曲添加隐藏class
+    for (var i = 0; i < playLists.length; i++) {
+        playLists[i].classList.add('hidden')
+    }
+    // 当歌曲的innerText包含搜索信息是去除class
+    for (var i = 0; i < playLists.length; i++) {
+        var a = playLists[i]
+        if (a.innerText.toLowerCase().includes(v.toLowerCase())){
+            a.classList.remove('hidden')
+        }
+    }
+}
+
+var likeIcon = `<div class='likes  none'><img src="icon\\like.png" class="icon-like" style="width:16px;height:16px;"></div>`
+var unlikeIcon = `<div class='likes'><img src="icon\\unlike.png" class="icon-unlike" style="width:16px;height:16px"></div>`
+
+// 喜欢按钮（事件委托，在事先存在的父元素上绑定事件）
+for (var i = 0; i < playLists.length; i++){
+    playLists[i].insertAdjacentHTML('afterbegin', likeIcon)
+    playLists[i].insertAdjacentHTML('afterbegin', unlikeIcon)
+    playLists[i].addEventListener('click', function(){
+        var target = event.target
+        var targetParent = target.parentElement
+        var targetParents = target.parentElement.parentElement
+        if(target.classList.contains('icon-like')){
+            targetParent.classList.add('none')
+            targetParents.childNodes[0].classList.remove('none')
+        }
+        if(target.classList.contains('icon-unlike')){
+            targetParent.classList.add('none')
+            targetParents.childNodes[1].classList.remove('none')
         }
     })
 }
-var likeIcon = '<img src="icon\\like.png" class="icon-like none" style="width:16px;height:16px;">'
-var unlikeIcon =  '<img src="icon\\unlike.png" class="icon-unlike" style="width:16px;height:16px">'
 
-$('.play-list-song').prepend(unlikeIcon)
-$('.play-list-song').prepend(likeIcon)
-$('.icon-like').on('click', function () {
-    var target = event.target
-    // unlikeIcons.removeClass('none')
-    target.addClass('none')
-})
-$('.icon-unlike').on('click', function () {
-    var target = event.target
-    // unlikeIcons.removeClass('none')
-    target.addClass('none')
-})
-var likeIcons = dqsa('.icon-like')
-var unlikeIcons = dqsa('.icon-unlike')
 // 音乐播放结束后播放下一首
-
 music.addEventListener('ended', function(){
-    for (var i = 0; i < songName.length; i++) {
+    for (var i = 0; i < songName.length; i++){
         var a = informationName.innerText
         var b = songName[i].innerText
-        if (a == b) {
+        if (a == b){
             // 在此处设置播放结束后下一曲的序号
             // 可以设置音乐循环模式,将orderLoop的计算方式更换一下即可
             var orderLoop = (i + 1) % songName.length
@@ -235,32 +252,28 @@ music.addEventListener('ended', function(){
         }
     }
 })
-// 下一曲
-nextIcon.addEventListener('click', function () {
+// 下一曲// 上一曲
+nextIcon.addEventListener('click', function (){
     changeMusic('next')
-
 })
-// 上一曲
-preIcon.addEventListener('click', function () {
+preIcon.addEventListener('click', function (){
     changeMusic('pre')
 })
-// 切换歌曲
-// 找出当前music.src的值
-
-var changeMusic = function (direct) {
-    if (music.attributes["src"] == undefined) {
+// 切换歌曲，只需要找出当前music.src的值
+var changeMusic = function (direct){
+    if (music.attributes["src"] == undefined){
         var currentSrcIndex = 0
     } else {
-        for (var i = 0; i < songName.length; i++) {
+        for (var i = 0; i < songName.length; i++){
             var b = informationName.innerText
             var c = songName[i].innerText
-            if (c == b) {
+            if (c == b){
                 var currentSrcIndex = i % songName.length
                 break
                 }
             }
         }
-    if (direct === 'next') {
+    if (direct === 'next'){
         var currentSrcIndex = (currentSrcIndex + 1) % songName.length
     } else {
         var currentSrcIndex = (currentSrcIndex -1 + songName.length * 100) % songName.length
@@ -274,11 +287,10 @@ var changeMusic = function (direct) {
     findMusic()
     musicPlay()
 }
-
 // 初始化播放音量和循环
-var playInitialize = function () {
-    music.volume = 0.5
-    currentVolume.style.width = '35px'
+var playInitialize = function (){
+    music.volume = 0.3
+    currentVolume.style.width = '21px'
     // music.loop = true
 }
 var _mainFunction = function(){

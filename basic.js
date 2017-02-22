@@ -10,7 +10,7 @@ var dqsa = function(selector){
 var dqs = function(selector){
     return document.querySelector(selector)
 }
-
+// toggle某个元素的class
 var toggleClass = function(element, className) {
     if (element.classList.contains(className)) {
         element.classList.remove(className)

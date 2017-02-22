@@ -6,7 +6,6 @@
     <title>音乐播放器</title>
     <link href="audio.css" rel="stylesheet">
     <script src='basic.js'></script>
-    <script src="jquery-3.1.1.min.js"></script>
 </head>
 
 <body>
@@ -48,14 +47,14 @@
                 </div>
                 <!-- 播放控制 -->
                 <div class="play-control">
-                    <img src="icon\play.png" id="id-icon-play">
-                    <img src="icon\pause.png" id="id-icon-pause" class="hidden">
-                    <img src="icon\play-back.png" id="id-icon-play-back">
-                    <img src="icon\play-forward.png" id="id-icon-play-forward">
-                    <img src="icon\volume.png" id="id-icon-volume">
-                    <img src="icon\静音.png" id="id-icon-volume-mute" class="hidden">
-                    <img src="icon\circle.png" id="id-icon-listcircle">
-                    <img src="icon\单曲循环.png" id="id-icon-singlecircle" class="hidden">
+                    <img src="icon\淡色\播放.png" id="id-icon-play">
+                    <img src="icon\淡色\暂停.png" id="id-icon-pause" class="hidden">
+                    <img src="icon\淡色\上一首.png" id="id-icon-play-back">
+                    <img src="icon\淡色\下一首.png" id="id-icon-play-forward">
+                    <img src="icon\淡色\音量.svg" id="id-icon-volume">
+                    <img src="icon\淡色\静音.svg" id="id-icon-volume-mute" class="hidden">
+                    <img src="icon\淡色\列表循环.png" id="id-icon-listcircle">
+                    <img src="icon\淡色\单曲循环.png" id="id-icon-singlecircle" class="hidden">
                     <div id="id-volume-bar" class='trans unvisi'>
                         <span id="id-total-volume" style="width:70px;"></span>
                         <span id="id-current-volume" style='width:'></span>
@@ -70,15 +69,30 @@
         </div>
         <div class="play-list">
             <table class="fixed-headers">
-                <thead>
-                    <td class="play-list-head">
-                        <th></th>
+                <thead class="play-list-head">
+                    <!-- <td > -->
+                        <!-- <th></th> -->
                         <th class="list-title">Title</th>
                         <th class="list-artist">Artist</th>
                         <th class="list-album">Album</th>
-                    </td>
+                    <!-- </td> -->
                 </thead>
                 <tbody class="">
+                    <tr class="play-list-song">
+                        <td class="song-name">成都</td>
+                        <td class="song-artist">赵雷</td>
+                        <td class="song-album">成都</td>
+                    </tr>
+                    <tr class="play-list-song">
+                        <td class="song-name">刚好遇见你</td>
+                        <td class="song-artist">李玉刚</td>
+                        <td class="song-album">刚好遇见你</td>
+                    </tr>
+                    <tr class="play-list-song">
+                        <td class="song-name">童话镇</td>
+                        <td class="song-artist">陈一发儿</td>
+                        <td class="song-album">童话镇</td>
+                    </tr>
                     <tr class="play-list-song">
                         <td class="song-name">Weekend</td>
                         <td class="song-artist">Dirk Reichardt</td>
@@ -105,9 +119,9 @@
                         <td class="song-album">My View</td>
                     </tr>
                     <tr class="play-list-song">
-                        <td class="song-name">You</td>
-                        <td class="song-artist">Approaching Nirvana</td>
-                        <td class="song-album">Blocking the Sky</td>
+                        <td class="song-name">We Don't Talk Anymore</td>
+                        <td class="song-artist">Charlie Puth</td>
+                        <td class="song-album">Nine Track Mind</td>
                     </tr>
                     <tr class="play-list-song">
                         <td class="song-name">My Soul</td>
@@ -125,9 +139,9 @@
                         <td class="song-album">A Cup Of Coffee</td>
                     </tr>
                     <tr class="play-list-song">
-                        <td class="song-name">The truth that you leave</td>
-                        <td class="song-artist">Pianoboy</td>
-                        <td class="song-album">The truth that you leave</td>
+                        <td class="song-name">匆匆那年</td>
+                        <td class="song-artist">王菲</td>
+                        <td class="song-album">匆匆那年</td>
                     </tr>
                     <tr class="play-list-song">
                         <td class="song-name">Luv Letter</td>
