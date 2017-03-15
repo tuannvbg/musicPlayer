@@ -19,7 +19,8 @@
     height: 60px;
     background-image: url(background.jpg);
     background-size: cover;
-    filter: blur(0.1px);
+    -webkit-filter: blur(0.1px);
+            filter: blur(0.1px);
     opacity: 0.9;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -45,22 +46,22 @@ thead {
 }
 .list-title {
     overflow: hidden;
-    left: -4%;
-    position: absolute;
+    /*left: -4%;*/
+    position: flex;
     width: 195px;
-    height: 30px;
+    /*height: 30px;*/
 }
 .list-artist {
     overflow: hidden;
-    left: 31%;
-    position: absolute;
+    /*left: 31%;*/
+    /*position: absolute;*/
     width: 195px;
     height: 30px;
 }
 .list-album {
     overflow: hidden;
-    position: absolute;
-    right: 115px;
+    position: relative;
+    left: 90px;
 }
 .music-plate {
     position: absolute;
@@ -168,6 +169,7 @@ thead {
 #id-played-bar{
     background: -webkit-linear-gradient(right, #fec514, #EE4000);
     z-index: 2;
+    -webkit-transition: all 0.3s;
     transition: all 0.3s;
 }
 #id-current-time,#id-total-time {
@@ -236,6 +238,7 @@ thead {
     background: -webkit-linear-gradient(right, #fec514, #EE4000);
     border-color: red;
     z-index: 2;
+    -webkit-transition: all 0.3s;
     transition: all 0.3s;
 }
 #id-icon-pause,#id-icon-play,#id-icon-play-back,#id-icon-play-forward {
@@ -252,6 +255,7 @@ thead {
     display: none !important;
 }
 .trans{
+   -webkit-transition: all 1s ease;
    transition:all 1s ease;
 }
 .hover{visibility:visible;}
@@ -259,15 +263,29 @@ thead {
     visibility:hidden;
 }
 .rotated {
-    animation: rotated 6s linear infinite;
+    -webkit-animation: rotated 6s linear infinite;
+            animation: rotated 6s linear infinite;
+}
+
+@-webkit-keyframes rotated {
+	0% {
+		-webkit-transform: rotate(0deg);
+		        transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		        transform: rotate(360deg);
+	}
 }
 
 @keyframes rotated {
 	0% {
-		transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		        transform: rotate(0deg);
 	}
 	100% {
-		transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
+		        transform: rotate(360deg);
 	}
 }
 
