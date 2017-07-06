@@ -4,10 +4,7 @@
     width: 809px;
     height: 556.2px;
     margin: 0 auto;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
+    border-radius: 20px;
     border-right-color: rgb(92,182,122);
     border-right-style: solid;
     border-right-width: 1px;
@@ -46,22 +43,22 @@ thead {
 }
 .list-title {
     overflow: hidden;
-    /*left: -4%;*/
-    position: flex;
+    left: -4%;
+    position: absolute;
     width: 195px;
-    /*height: 30px;*/
+    height: 30px;
 }
 .list-artist {
     overflow: hidden;
-    /*left: 31%;*/
-    /*position: absolute;*/
+    left: 31%;
+    position: absolute;
     width: 195px;
     height: 30px;
 }
 .list-album {
     overflow: hidden;
-    position: relative;
-    left: 90px;
+    position: absolute;
+    right: 115px;
 }
 .music-plate {
     position: absolute;
@@ -247,18 +244,19 @@ thead {
 #id-played-bar,#id-music-bar,.song-name,.icon-unlike,.icon-like {
     cursor: pointer;
 }
-.none{
+
+.hidden {
     visibility:hidden !important;
 }
 
-.hidden{
+.none {
     display: none !important;
 }
 .trans{
-   -webkit-transition: all 1s ease;
+   -webkit-transition:all 1s ease;
    transition:all 1s ease;
 }
-.hover{visibility:visible;}
+.hover{ visibility:visible;}
 .unvisi{
     visibility:hidden;
 }
@@ -310,6 +308,16 @@ thead {
 }
 
 /*歌曲列表的CSS*/
+.play-list-song {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack:distribute;
+        justify-content:space-around;
+    -webkit-box-align:center;
+        -ms-flex-align:center;
+            align-items:center;
+}
 .play-list-song:hover {
     background-color: rgba(133, 143, 144, 0.4);
 }
@@ -322,13 +330,15 @@ thead {
 .odd-row-color {
     /*background-color: #ABCDEF;*/
 }
-.icon-like,.icon-unlike{
+.icon-like, .icon-unlike {
+    width:16px;
+    height:16px;
     position: absolute;
     left: 2%;
 }
 .likes {
     position: relative;
-    top: 4px;
+    top: -8px;
     left: 8px;
 }
 .song-name {
@@ -349,4 +359,7 @@ thead {
     left: 3%;
     position: relative;
     width: 220px;
+}
+.blank-th {
+    width: 50px;
 }

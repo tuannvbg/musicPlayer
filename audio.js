@@ -11,12 +11,12 @@ var totalTime = dqs('#id-total-time')
 var playedBar = dqs('#id-played-bar')
 var musicBar = dqs('#id-music-bar')
 var playList = dqs('.play-list')
-var playLists = dqsa('.play-list-song')
+var playLists = dqs('.play-list-song')
 var musicName = dqs('.music-name')
-var songName = dqsa('.song-name')
+var songName = dqs('.song-name')
 var informationName = dqs('.information-name')
 var informationAuthor = dqs('.information-author')
-var songArtist = dqsa('.song-artist')
+var songArtist = dqs('.song-artist')
 var platePast = dqs('.plate-past')
 var plateNow = dqs('.plate-now')
 var plateNext = dqs('.plate-next')
@@ -29,6 +29,7 @@ var totalVolume = dqs('#id-total-volume')
 var currentVolume = dqs('#id-current-volume')
 var volumeBar = dqs('#id-volume-bar')
 var listSearch = dqs('.list-search')
+
 // 查找音乐
 var findMusic = function (){
     for (var i = 0; i < songName.length; i++){
@@ -66,32 +67,40 @@ var musicPlay = function(){
     musicCover.classList.add('rotated')
 }
 // 音乐暂停
-var musicPause = function(){
+var musicPause = function() {
     music.pause()
     playIcon.classList.remove('hidden')
     pauseIcon.classList.add('hidden')
     musicCover.classList.remove('rotated')
 }
-// 给播放、暂停按钮绑定事件
-playIcon.addEventListener('click', musicPlay)
-pauseIcon.addEventListener('click', musicPause)
-// 播放时间显示
-// music 载入音乐需要时间, 载入完成后会触发 'canplay' 事件
-// 所以我们在 canplay 里面设置时间
-music.addEventListener('canplay', function(){
-    totalTime.innerHTML = transTime(music.duration)
-})
-music.addEventListener('timeupdate', function(){
-    currentTime.innerHTML = transTime(music.currentTime)
-})
-
+var playNext = function() {
+    for (var i = 0; i < songName.length; i++){
+        var a = informationName.innerText
+        var b = songName[i].innerText
+        if (a == b){
+            // 在此处设置播放结束后下一曲的序号
+            // 可以设置音乐循环模式,将orderLoop的计算方式更换一下即可
+            var orderLoop = (i + 1) % songName.length
+            var f = songName[orderLoop].innerText
+            var song = "music\\" + f + '.mp3'
+            var cover = "cover\\" + f + '.jpg'
+            informationName.innerText = f
+            musicCover.src = cover
+            music.src = song
+            findMusic()
+            musicPlay()
+            break
+        }
+    }
+}
 // 播放进度实时更新(修改为歌曲播放时开启定时器，暂停和页面load时清除定时器)
 // setInterval() 方法可按照指定的周期（以毫秒计）来调用函数或计算表达式。
-setInterval(function updatePlayedBar(){
+var setTime = setInterval(function updatePlayedBar() {
     var musicBarWidth = musicBar.clientWidth
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
     currentTime.innerHTML = transTime(music.currentTime)
+    console.log(music.currentTime, transTime(music.currentTime), '时间都去哪了');
     //如果是时间结束，并且是非单曲循环，自动下一曲
     if (music.currentTime === music.duration && !music.loop){
         nextIcon.click()
@@ -111,19 +120,21 @@ singleCircleIcon.addEventListener('click', function(){
 })
 
 // 设置播放进度条
-musicBar.addEventListener('click', function (){
-    var musicBarWidth = musicBar.clientWidth
+var controlBar = function () {
+    var target = event.target
+    var musicBarWidth = target.clientWidth
     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
     music.currentTime = newCurrentTime
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
+    console.log(playedBar.style.width, 'zhegeyoubu');
+}
+
+musicBar.addEventListener('click', function () {
+    controlBar()
 })
 playedBar.addEventListener('click', function (){
-    var musicBarWidth = musicBar.clientWidth
-    var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
-    music.currentTime = newCurrentTime
-    var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
-    playedBar.style.width = playedBarWidth + 'px'
+    controlBar()
 })
 
 // 音量控制
@@ -150,26 +161,23 @@ volumeIcon.addEventListener('click', function(){
     music.muted = true
 })
 totalVolume.addEventListener('click', function (){
-    var totalVolumeWidth = totalVolume.clientWidth
-    var newCurrentVolume = event.offsetX / totalVolumeWidth
+    var targetWidth = totalVolume.clientWidth
+    var newCurrentVolume = event.offsetX / targetWidth
     music.volume = newCurrentVolume
-    var currentVolumeWidth = newCurrentVolume * totalVolumeWidth
+    var currentVolumeWidth = newCurrentVolume * targetWidth
     currentVolume.style.width = currentVolumeWidth + 'px'
 })
 currentVolume.addEventListener('click', function (){
-    var totalVolumeWidth = totalVolume.clientWidth
-    var newCurrentVolume = event.offsetX / totalVolumeWidth
+    var targetWidth = totalVolume.clientWidth
+    var newCurrentVolume = event.offsetX / targetWidth
     music.volume = newCurrentVolume
-    var currentVolumeWidth = newCurrentVolume * totalVolumeWidth
+    var currentVolumeWidth = newCurrentVolume * targetWidth
     currentVolume.style.width = currentVolumeWidth + 'px'
 })
 // 歌曲列表点击，播放音乐
 playList.addEventListener('click', function(event){
     var target = event.target
     if (target.classList.contains('song-name')){
-        // 可以根据childNodes找到相邻的歌曲信息,可以将右边的图片改为歌手的图片
-        // var a002 = target.parentElement.childNodes[5].innerText
-        // log(target, a002)
         var song = "music\\" + target.innerText + '.mp3'
         var cover = "cover\\" + target.innerText + '.jpg'
         informationName.innerText = target.innerText
@@ -195,7 +203,7 @@ listSearch.addEventListener('keyup', function(event){
     searchTitle(v)
 })
 
-var searchTitle = function(v){
+var searchTitle = function(v) {
     // 给所有歌曲添加隐藏class
     for (var i = 0; i < playLists.length; i++) {
         playLists[i].classList.add('hidden')
@@ -209,56 +217,30 @@ var searchTitle = function(v){
     }
 }
 
-var likeIcon = `<div class='likes  none'><img src="icon\\like.png" class="icon-like" style="width:16px;height:16px;"></div>`
-var unlikeIcon = `<div class='likes'><img src="icon\\unlike.png" class="icon-unlike" style="width:16px;height:16px"></div>`
-
+var likesIcon = `
+        <td class='likes'>
+            <img src="icon\\like.png" class="icon-like hidden">
+            <img src="icon\\unlike.png" class="icon-unlike">
+        </td>
+    `
 // 喜欢按钮（事件委托，在事先存在的父元素上绑定事件）
 for (var i = 0; i < playLists.length; i++){
-    playLists[i].insertAdjacentHTML('afterbegin', likeIcon)
-    playLists[i].insertAdjacentHTML('afterbegin', unlikeIcon)
-    playLists[i].addEventListener('click', function(){
-        var target = event.target
-        var targetParent = target.parentElement
-        var targetParents = target.parentElement.parentElement
-        if(target.classList.contains('icon-like')){
-            targetParent.classList.add('none')
-            targetParents.childNodes[0].classList.remove('none')
-        }
-        if(target.classList.contains('icon-unlike')){
-            targetParent.classList.add('none')
-            targetParents.childNodes[1].classList.remove('none')
-        }
-    })
+    playLists[i].insertAdjacentHTML('afterbegin', likesIcon)
 }
-
-// 音乐播放结束后播放下一首
-music.addEventListener('ended', function(){
-    for (var i = 0; i < songName.length; i++){
-        var a = informationName.innerText
-        var b = songName[i].innerText
-        if (a == b){
-            // 在此处设置播放结束后下一曲的序号
-            // 可以设置音乐循环模式,将orderLoop的计算方式更换一下即可
-            var orderLoop = (i + 1) % songName.length
-            var f = songName[orderLoop].innerText
-            var song = "music\\" + f + '.mp3'
-            var cover = "cover\\" + f + '.jpg'
-            informationName.innerText = f
-            musicCover.src = cover
-            music.src = song
-            findMusic()
-            musicPlay()
-            break
-        }
+var likeToggle = function () {
+    var target = event.target
+    var targetParent = target.parentElement
+    var condition = targetParent.classList.contains('likes')
+    if (condition) {
+        var likeIcon = findElement(targetParent, '.icon-like')
+        var unlikeIcon = findElement(targetParent, '.icon-unlike')
+        toggleClass(likeIcon, 'hidden')
+        toggleClass(unlikeIcon, 'hidden')
     }
-})
-// 下一曲// 上一曲
-nextIcon.addEventListener('click', function (){
-    changeMusic('next')
-})
-preIcon.addEventListener('click', function (){
-    changeMusic('pre')
-})
+
+}
+// 音乐播放结束后播放下一首
+
 // 切换歌曲，只需要找出当前music.src的值
 var changeMusic = function (direct){
     if (music.attributes["src"] == undefined){
@@ -287,13 +269,49 @@ var changeMusic = function (direct){
     findMusic()
     musicPlay()
 }
+
 // 初始化播放音量和循环
 var playInitialize = function (){
     music.volume = 0.3
     currentVolume.style.width = '21px'
     // music.loop = true
 }
+
+var bindEvents = function () {
+    // 给播放、暂停按钮绑定事件
+    playIcon.addEventListener('click', musicPlay)
+    pauseIcon.addEventListener('click', musicPause)
+    // 播放时间显示
+    // music 载入音乐需要时间, 载入完成后会触发 'canplay' 事件
+    // 所以我们在 canplay 里面设置时间
+    music.addEventListener('canplay', function(){
+        totalTime.innerHTML = transTime(music.duration)
+    })
+    music.addEventListener('timeupdate', function(){
+        currentTime.innerHTML = transTime(music.currentTime)
+    })
+    music.addEventListener('ended', function () {
+        playNext()
+    })
+    // 下一曲// 上一曲
+    nextIcon.addEventListener('click', function (){
+        changeMusic('next')
+    })
+    preIcon.addEventListener('click', function (){
+        changeMusic('pre')
+    })
+    // 绑定排序事件
+    bindEventAll('.play-list-head th', 'click', function () {
+        console.log('nengdaozhe ?');
+        sortTable()
+        console.log('这呢？');
+    })
+    bindEventAll('.play-list', 'click', function () {
+        likeToggle()
+    })
+}
 var _mainFunction = function(){
+    bindEvents()
     playInitialize()
 }
 _mainFunction()
