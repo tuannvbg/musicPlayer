@@ -1,4 +1,3 @@
-
 var music = dqs('#id-music-playing')
 var playIcon = dqs('#id-icon-play')
 var pauseIcon = dqs('#id-icon-pause')
@@ -12,7 +11,6 @@ var playedBar = dqs('#id-played-bar')
 var musicBar = dqs('#id-music-bar')
 var playList = dqs('.play-list')
 var playLists = dqs('.play-list-song')
-var musicName = dqs('.music-name')
 var songName = dqs('.song-name')
 var informationName = dqs('.information-name')
 var informationAuthor = dqs('.information-author')
@@ -20,8 +18,6 @@ var songArtist = dqs('.song-artist')
 var platePast = dqs('.plate-past')
 var plateNow = dqs('.plate-now')
 var plateNext = dqs('.plate-next')
-var totalVolume = dqs('#total-volume')
-var currentVolume = dqs('#current-volume')
 var volumeIcon = dqs('#id-icon-volume')
 var listCircleIcon = dqs('#id-icon-listcircle')
 var singleCircleIcon = dqs('#id-icon-singlecircle')
@@ -33,7 +29,6 @@ var listSearch = dqs('.list-search')
 // 查找音乐
 var findMusic = function (){
     for (var i = 0; i < songName.length; i++){
-        var currentMusicIndex = 0
         var a = informationName.innerText
         var b = songName[i].innerText
         if (b == a){
@@ -100,7 +95,7 @@ var setTime = setInterval(function updatePlayedBar() {
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
     currentTime.innerHTML = transTime(music.currentTime)
-    console.log(music.currentTime, transTime(music.currentTime), '时间都去哪了');
+    // console.log(music.currentTime, transTime(music.currentTime), '时间都去哪了');
     //如果是时间结束，并且是非单曲循环，自动下一曲
     if (music.currentTime === music.duration && !music.loop){
         nextIcon.click()
@@ -120,21 +115,20 @@ singleCircleIcon.addEventListener('click', function(){
 })
 
 // 设置播放进度条
-var controlBar = function () {
+var controlBar = function (event) {
     var target = event.target
     var musicBarWidth = target.clientWidth
     var newCurrentTime = (event.offsetX / musicBarWidth) * music.duration
     music.currentTime = newCurrentTime
     var playedBarWidth = (music.currentTime / music.duration) * musicBarWidth
     playedBar.style.width = playedBarWidth + 'px'
-    console.log(playedBar.style.width, 'zhegeyoubu');
 }
 
-musicBar.addEventListener('click', function () {
-    controlBar()
+musicBar.addEventListener('click', function (event) {
+    controlBar(event)
 })
-playedBar.addEventListener('click', function (){
-    controlBar()
+playedBar.addEventListener('click', function (event){
+    controlBar(event)
 })
 
 // 音量控制
@@ -227,7 +221,7 @@ var likesIcon = `
 for (var i = 0; i < playLists.length; i++){
     playLists[i].insertAdjacentHTML('afterbegin', likesIcon)
 }
-var likeToggle = function () {
+var likeToggle = function (event) {
     var target = event.target
     var targetParent = target.parentElement
     var condition = targetParent.classList.contains('likes')
@@ -302,16 +296,14 @@ var bindEvents = function () {
     })
     // 绑定排序事件
     bindEventAll('.play-list-head th', 'click', function () {
-        console.log('nengdaozhe ?');
         sortTable()
-        console.log('这呢？');
     })
-    bindEventAll('.play-list', 'click', function () {
-        likeToggle()
+    bindEventAll('.play-list', 'click', function (event) {
+        likeToggle(event)
     })
 }
-var _mainFunction = function(){
+var __main = function(){
     bindEvents()
     playInitialize()
 }
-_mainFunction()
+__main()
